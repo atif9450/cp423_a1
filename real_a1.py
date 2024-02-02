@@ -7,7 +7,7 @@ import nltk
 from nltk.corpus import stopwords
 import re
 
-"""CAN WE DELETE LINES 11 TO 21??"""
+"""CAN WE DELETE LINES 11 TO 21?"""
 #def doc_lower(file1, file2):
 #    for line in file1:
 #        line = line.lower()
