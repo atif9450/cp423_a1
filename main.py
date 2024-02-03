@@ -1,12 +1,6 @@
 from q3_q4 import *
 from real_a1 import *
 import pickle
-from nltk.tokenize import word_tokenize
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-from nltk.corpus import stopwords
-import re
 
 #try to load inverted index and file names if already created; create and save otherwise
 inverted_index = None
@@ -30,50 +24,27 @@ queries = []
 for i in range(num_queries):
     print('\nQuery {}'.format(i+1))
     sentence = input("Input sentence: ")
-    #lowers sentence in case 
-    sentence = sentence.lower()
-    pq = ''
-    tw = word_tokenize(sentence)
-    for w in tw:
-        i = 0
-        for l in w:
-
-            #makes sure each letter in the query is alphanum
-            pro_word = re.sub("[^A-Za-z0-9]","",l) 
-
-            #takes only greter than 1 character
-            if (len(w) > 1):
-
-                #takes care of the stop words
-                if (w in stopwords.words('english')):
-                    f = 0
-                else:
-                    
-                    pq += pro_word
-                    i+=1
-        #adds space at end of each word
-        if i!=0:
-            pq += ' '
-    sentence = pq
     operations = input("Input operations: ")
-    #apply preprocessing to sentence
+    
+    #apply preprocessing
     sentence = preprocess_sentence(sentence)
     sentence = sentence.split(' ')
     operations = operations.split(' ')
-    queries.append([sentence, operations])
 
-cost_dict = {}
-pqueries = []
+    queries.append([sentence, operations]) #add query
+
+cost_dict = {} #for keeping track of query costs
+pqueries = [] #list for prioritized queries
 for q in queries:
     words = q[0]
     ops = q[1]
-    for i in range(len(ops)):
+    for i in range(len(ops)): #calculate costs for different queries and construct cost_dict
         op_words = [words[i], words[i+1]]
         cost = query_cost(op_words, ops[i], inverted_index)
         cost_dict.update({i: [op_words, ops[i], cost]})
 
-    cost_dict = dict(sorted(cost_dict.items(), key=lambda item: item[1][2]))
-    pqueries.append(prioritize_query(cost_dict))
+    cost_dict = dict(sorted(cost_dict.items(), key=lambda item: item[1][2])) #sort cost_dict in order of ascending document frequency
+    pqueries.append(prioritize_query(cost_dict)) #construct list of priotized queries
 
 for q in pqueries: #iterate through queries
     words = q[0]
@@ -87,7 +58,7 @@ for q in pqueries: #iterate through queries
     left = inverted_index[words[0]]
     word_pointer = 1
     comparisons = 0
-    for o in operations:
+    for o in operations: #iterate through the operations in the query
         right = inverted_index[words[word_pointer]]
         word_pointer += 1
 
@@ -100,7 +71,7 @@ for q in pqueries: #iterate through queries
         else:
             left, comparisons = OR_NOT(left, right, comparisons)
 
-    # #output results
+    #output results
     print("\nNumber of matched documents: {}".format(len(left)))
     print("Minimum number of comparisons required: {}".format(comparisons))
     print('Document names:')

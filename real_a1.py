@@ -7,24 +7,13 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 import re
 
-"""CAN WE DELETE LINES 11 TO 21?"""
-#def doc_lower(file1, file2):
-#    for line in file1:
-#        line = line.lower()
-#        file2.write(line)
-#   return
-
-#def doc_tok(file, list_tok):
-#    for line in f:
-#        fs = word_tokenize(line) 
-#        list.append(fs)
-#    return list
-
 #function for replacing a files contents 
 def fill(out, inp):
     for lines in inp:
         out.write(lines)
     return
+
+#for preprocessing data
 def construct_inverted_index(path=""):
     #declaring all empty lists and counters
     dict = {}
@@ -132,6 +121,7 @@ def construct_inverted_index(path=""):
 
     return dict, file_names 
 
+#for preprocessing queries
 def preprocess_sentence(sentence: str) -> str:
     sentence = sentence.lower()
     pq = ''

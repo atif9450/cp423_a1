@@ -1,16 +1,6 @@
 from copy import deepcopy
 
 def OR(left: list, right: list, total_comparisons: int) -> (list, int):
-    """
-    Parameters:
-        left: current list of documents
-        term: current term in query
-        inverted_index: inverted index of terms/documents
-        total_comparisons: total number of comparisons till now
-    Returns:
-        left: updated list of documents
-        total_comparisons: updated number of comparisons after query
-    """
     left += right #OR operation, union sets of documents
     
     #remove duplicates and sort
@@ -21,16 +11,6 @@ def OR(left: list, right: list, total_comparisons: int) -> (list, int):
     return left, total_comparisons
 
 def AND(left: list, right: list, total_comparisons: int) -> (list, int):
-    """
-    Parameters:
-        left: current list of documents
-        term: current term in query
-        inverted_index: inverted index of terms/documents
-        total_comparisons: total number of comparisons till now
-    Returns:
-        left: updated list of documents
-        total_comparisons: updated number of comparisons after query
-    """
     left_pointer = 0 #pointer
     right_pointer = 0 #pointer
     new_docs = [] #new list of documents
@@ -51,16 +31,6 @@ def AND(left: list, right: list, total_comparisons: int) -> (list, int):
     return new_docs, total_comparisons
 
 def AND_NOT(left: list, right: list, total_comparisons: int) -> (list, int):
-    """
-    Parameters:
-        left: current list of documents
-        term: current term in query
-        inverted_index: inverted index of terms/documents
-        total_comparisons: total number of comparisons till now
-    Returns:
-        left: updated list of documents
-        total_comparisons: updated number of comparisons after query
-    """
     right_pointer = 0 #pointer
     left_pointer = 0 #pointer
     new_docs = [] #new list of documents
@@ -83,17 +53,7 @@ def AND_NOT(left: list, right: list, total_comparisons: int) -> (list, int):
     return new_docs, total_comparisons
 
 def OR_NOT(left: list, right: list, total_comparisons: int) -> (list, int):
-    """
-    Parameters:
-        left: current list of documents
-        term: current term in query
-        inverted_index: inverted index of terms/documents
-        total_comparisons: total number of comparisons till now
-    Returns:
-        left: updated list of documents
-        total_comparisons: updated number of comparisons after query
-    """
-    return left, total_comparisons
+    return left, total_comparisons #return left using NOR logic
 
 def query_cost(words: list, operation: list, inverted_index: dict) -> list:
     left = inverted_index[words[0]]
