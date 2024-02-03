@@ -1,5 +1,5 @@
 from q3_q4 import *
-from real_a1 import construct_inverted_index
+from real_a1 import *
 import pickle
 
 #try to load inverted index and file names if already created; create and save otherwise
@@ -25,34 +25,53 @@ for i in range(num_queries):
     print('\nQuery {}'.format(i+1))
     sentence = input("Input sentence: ")
     operations = input("Input operations: ")
+    #apply preprocessing to sentence
+    sentence = preprocess_sentence(sentence)
+    sentence = sentence.split(' ')
     operations = operations.split(' ')
     queries.append([sentence, operations])
 
-for q in queries: #iterate through queries
-    words = q[0].split(' ')
+cost_dict = {}
+pqueries = []
+for q in queries:
+    words = q[0]
+    ops = q[1]
+    for i in range(len(ops)):
+        op_words = [words[i], words[i+1]]
+        cost = query_cost(op_words, ops[i], inverted_index)
+        cost_dict.update({i: [op_words, ops[i], cost]})
+
+    cost_dict = dict(sorted(cost_dict.items(), key=lambda item: item[1][2]))
+    pqueries.append(prioritize_query(cost_dict))
+
+for q in pqueries: #iterate through queries
+    words = q[0]
     operations = q[1]
+
+    #display current query
     print('\nQuery:')
     print('Input sentence: {}'.format(words))
     print('Input operations: {}'.format(operations))
 
-    docs = inverted_index[words[0]]
+    left = inverted_index[words[0]]
+    word_pointer = 1
     comparisons = 0
-    term_number = 1
-    for o in operations: #perform operations as necessary
-        term = words[term_number]
-        term_number += 1
-        if o == 'OR':
-            docs, comparisons = OR(docs, term, inverted_index, comparisons)
-        elif o == 'AND':
-            docs, comparisons = AND(docs, term, inverted_index, comparisons)
-        elif o == 'ANDNOT':
-            docs, comparisons = AND_NOT(docs, term, inverted_index, comparisons)
-        else:
-            docs, comparisons = OR_NOT(docs, term, inverted_index, comparisons)
+    for o in operations:
+        right = inverted_index[words[word_pointer]]
+        word_pointer += 1
 
-    #output results
-    print("\nNumber of matched documents: {}".format(len(docs)))
+        if o == 'OR':
+            left, comparisons = OR(left, right, comparisons)
+        elif o == 'AND':
+            left, comparisons = AND(left, right, comparisons)
+        elif o == 'ANDNOT':
+            left, comparisons = AND_NOT(left, right, comparisons)
+        else:
+            left, comparisons = OR_NOT(left, right, comparisons)
+
+    # #output results
+    print("\nNumber of matched documents: {}".format(len(left)))
     print("Minimum number of comparisons required: {}".format(comparisons))
     print('Document names:')
-    for d in docs:
+    for d in left:
         print(file_names[d])
