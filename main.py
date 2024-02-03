@@ -1,6 +1,12 @@
 from q3_q4 import *
 from real_a1 import construct_inverted_index
 import pickle
+from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+import re
 
 #try to load inverted index and file names if already created; create and save otherwise
 inverted_index = None
@@ -24,6 +30,31 @@ queries = []
 for i in range(num_queries):
     print('\nQuery {}'.format(i+1))
     sentence = input("Input sentence: ")
+    #lowers sentence in case 
+    sentence = sentence.lower()
+    pq = ''
+    tw = word_tokenize(sentence)
+    for w in tw:
+        i = 0
+        for l in w:
+
+            #makes sure each letter in the query is alphanum
+            pro_word = re.sub("[^A-Za-z0-9]","",l) 
+
+            #takes only greter than 1 character
+            if (len(w) > 1):
+
+                #takes care of the stop words
+                if (w in stopwords.words('english')):
+                    f = 0
+                else:
+                    
+                    pq += pro_word
+                    i+=1
+        #adds space at end of each word
+        if i!=0:
+            pq += ' '
+    sentence = pq
     operations = input("Input operations: ")
     operations = operations.split(' ')
     queries.append([sentence, operations])
