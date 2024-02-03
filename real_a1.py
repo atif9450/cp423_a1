@@ -83,7 +83,7 @@ def construct_inverted_index(path=""):
                     only_alphnum = re.sub("[^A-Za-z0-9]","",letter)  
 
                     #makes sure the length of every word is more than 1
-                    if (len(only_alphnum) > 1):
+                    if (len(word) > 1):
                         if (only_alphnum in stopwords.words('english')):
                             f = 0
                         #only takes the words that are not stopwords
