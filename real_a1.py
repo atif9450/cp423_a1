@@ -2,8 +2,8 @@
 import os
 from nltk.tokenize import word_tokenize
 import nltk
-# nltk.download('punkt')
-# nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 import re
 
@@ -131,3 +131,29 @@ def construct_inverted_index(path=""):
             file_num +=1
 
     return dict, file_names 
+
+def preprocess_sentence(sentence: str) -> str:
+    sentence = sentence.lower()
+    pq = ''
+    tw = word_tokenize(sentence)
+    for w in tw:
+        i = 0
+        for l in w:
+
+            #makes sure each letter in the query is alphanum
+            pro_word = re.sub("[^A-Za-z0-9]","",l) 
+
+            #takes only greter than 1 character
+            if (len(w) > 1):
+
+                #takes care of the stop words
+                if (w in stopwords.words('english')):
+                    f = 0
+                else:
+                    
+                    pq += pro_word
+                    i+=1
+        #adds space at end of each word
+        if i!=0:
+            pq += ' '
+    return pq
