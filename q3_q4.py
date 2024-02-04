@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 def OR(left: list, right: list, total_comparisons: int) -> (list, int):
     left += right #OR operation, union sets of documents
     
@@ -47,6 +45,7 @@ def AND_NOT(left: list, right: list, total_comparisons: int) -> (list, int):
                 right_pointer += 1
 
         else: #increment apprioprately
+            total_comparisons += 1
             left_pointer += 1
             right_pointer += 1
     
