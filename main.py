@@ -4,6 +4,7 @@ import pickle
 
 #try to load inverted index and file names if already created; create and save otherwise
 inverted_index = None
+file_names = None
 try:
     inverted_index = pickle.load(open('inverted_index.pickle', 'rb'))
     file_names = pickle.load(open('file_names.pickle', 'rb'))

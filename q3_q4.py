@@ -69,7 +69,6 @@ def query_cost(words: list, operation: list, inverted_index: dict) -> list:
 def prioritize_query(cost_dict: dict) -> (list, list):
     words = []
     operations = []
-    one = True
     for k in cost_dict.keys():
         key_words = cost_dict[k][0]
         for kw in key_words:
